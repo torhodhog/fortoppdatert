@@ -61,7 +61,11 @@ export default function NewsPage() {
         <Image src={bilde.url} alt={bilde.caption || "Nyhetsbilde"} width={500} height={300} className="rounded-lg mb-4" />
       )}
 
-      <p className="text-lg text-gray-300 mb-6 line-clamp-4">{nyhet.content.find((item) => item.type === "MARKUP")?.data}</p>
+<p 
+  className="text-lg text-gray-300 mb-6 line-clamp-4"
+  dangerouslySetInnerHTML={{ __html: nyhet.content.find((item) => item.type === "MARKUP")?.data || "" }}
+/>
+
 
       <button
         onClick={() => router.push(`/nyhet/${nyhet.id}`)}
