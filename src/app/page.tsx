@@ -25,8 +25,8 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-[#100118] text-white px-4">
-      <h1 className="text-5xl font-bold mb-8 text-center">🔥 Fort Oppdatert</h1>
+    <div className="flex flex-col items-center justify-center h-screen bg-[#100118] text-white px-4 pb-12">
+      <h1 className="text-5xl font-bold mb-8 text-center pt-4">🔥 Fort Oppdatert</h1>
       <p className="text-lg font-medium mb-6 text-gray-300">Hva vil du få med deg?</p>
       
       <div className="flex flex-wrap gap-4 justify-center px-2 w-full max-w-md">

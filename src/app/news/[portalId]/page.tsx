@@ -63,39 +63,37 @@ export default function NewsPage() {
         <Image src={bilde.url} alt={bilde.caption || "Nyhetsbilde"} width={500} height={300} className="rounded-lg mb-4" />
       )}
 
-<p 
-  className="text-lg text-gray-300 mb-6 line-clamp-4"
-  dangerouslySetInnerHTML={{ __html: nyhet.content.find((item) => item.type === "MARKUP")?.data || "" }}
-/>
+      <p 
+        className="text-lg text-gray-300 mb-6 line-clamp-4"
+        dangerouslySetInnerHTML={{ __html: nyhet.content.find((item) => item.type === "MARKUP")?.data || "" }}
+      />
 
-
-<Link key={nyhet.id} href={`/article/${nyhet.id}`} className="text-blue-500 underline">
-  Les mer
-</Link>
-
+      <Link key={nyhet.id} href={`/article/${nyhet.id}`} className="text-blue-500 underline">
+        Les mer
+      </Link>
 
       <div className="mt-6 flex gap-4">
       <div className="flex justify-between w-full mt-4">
-  {/* For desktop */}
-  <div className="hidden sm:flex w-full justify-between">
+  {/* For desktop (kun fra 1280px og opp) */}
+  <div className="hidden xl:flex w-full justify-between">
     <button
       onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
       disabled={currentIndex === 0}
       className="px-4 py-2 bg-gray-600 text-white rounded disabled:opacity-50 mr-4"
     >
-      👈 Forrige
+      ⇦ Forrige
     </button>
     <button
       onClick={() => setCurrentIndex((prev) => Math.min(nyheter.length - 1, prev + 1))}
       disabled={currentIndex === nyheter.length - 1}
       className="px-4 py-2 bg-gray-600 text-white rounded disabled:opacity-50"
     >
-      Neste 👉
+      Neste ⇨
     </button>
   </div>
 
-  {/* For mobil/ipad */}
-  <p className="sm:hidden text-gray-400 text-center w-full">← Swipe →</p>
+  {/* For mobil og iPad (opptil 1279px) */}
+  <p className="xl:hidden text-gray-400 text-center w-full">⇦ Swipe ⇨</p>
 </div>
 
       </div>
