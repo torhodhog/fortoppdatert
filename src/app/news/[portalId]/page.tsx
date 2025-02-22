@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { fetchNews } from "@/app/lib/api";
 import Image from "next/image";
 import { useSwipeable } from "react-swipeable";
+import Link from "next/link";
 
 interface Nyhet {
   id: string;
@@ -17,7 +18,7 @@ interface Nyhet {
 
 export default function NewsPage() {
   const { portalId } = useParams();
-  const router = useRouter();
+
   const [nyheter, setNyheter] = useState<Nyhet[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -55,6 +56,7 @@ export default function NewsPage() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-[#100118] text-white px-4" {...swipeHandlers}>
+      
       <h1 className="text-3xl font-bold mb-6">{nyhet.title}</h1>
 
       {bilde?.url && (
@@ -67,12 +69,10 @@ export default function NewsPage() {
 />
 
 
-      <button
-        onClick={() => router.push(`/nyhet/${nyhet.id}`)}
-        className="px-6 py-3 bg-[#b2aeff] text-[#1f1031] rounded-lg font-semibold hover:bg-[#fcdd8c] transition"
-      >
-        Les mer
-      </button>
+<Link key={nyhet.id} href={`/article/${nyhet.id}`} className="text-blue-500 underline">
+  Les mer
+</Link>
+
 
       <div className="mt-6 flex gap-4">
         <button
