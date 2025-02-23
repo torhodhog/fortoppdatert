@@ -5,6 +5,7 @@ import { fetchNews } from "@/app/lib/api";
 import Image from "next/image";
 import { useSwipeable } from "react-swipeable";
 import Link from "next/link";
+import PopUp from "../../../components/Popup"; // 🆕 Import PopUp-komponenten
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -29,8 +30,10 @@ export default function NewsPage() {
   const { portalId } = useParams();
   const [nyheter, setNyheter] = useState<Nyhet[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [sammendrag, setSammendrag] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [visSammendrag, setVisSammendrag] = useState<boolean>(false);
 
-  // Hent nyheter fra API
   useEffect(() => {
     async function hentNyheter() {
       try {
@@ -43,7 +46,6 @@ export default function NewsPage() {
     hentNyheter();
   }, [portalId]);
 
-  // Swipe-funksjonalitet
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
       if (currentIndex < nyheter.length - 1) setCurrentIndex((prev) => prev + 1);
@@ -55,17 +57,39 @@ export default function NewsPage() {
     trackMouse: true,
   });
 
-  // Hvis ingen nyheter er lastet inn
   if (nyheter.length === 0) return null;
 
   const nyhet = nyheter[currentIndex];
   const bildeObj = nyhet.content.find((item) => item.type === "PICTURES");
   const bilde = bildeObj?.files?.[0];
 
+  const hentSammendrag = async () => {
+    if (!nyhet) return;
+
+    setLoading(true);
+    try {
+      const response = await fetch("/api/openai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: nyhet.content.find((item) => item.type === "MARKUP")?.data || "",
+          type: "summary",
+        }),
+      });
+
+      const data = await response.json();
+      setSammendrag(data.result);
+      setVisSammendrag(true);
+    } catch (error) {
+      console.error("Feil ved generering av sammendrag:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-[#100118] text-white px-4" {...swipeHandlers}>
       
-      {/* 🔹 Breadcrumb */}
       <Breadcrumb className="mb-4 self-start">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -91,13 +115,25 @@ export default function NewsPage() {
         dangerouslySetInnerHTML={{ __html: nyhet.content.find((item) => item.type === "MARKUP")?.data || "" }}
       />
 
-      <Link key={nyhet.id} href={`/article/${nyhet.id}`} className="text-blue-500 underline">
-        Les mer
-      </Link>
+      <div className="flex gap-4">
+        <Link key={nyhet.id} href={`/article/${nyhet.id}`} className="px-4 py-2 bg-blue-500 text-white rounded-lg">
+          Les saken →
+        </Link>
+
+        <button
+          onClick={hentSammendrag}
+          className="px-4 py-2 bg-[#b2aeff] text-[#1f1031] rounded-lg font-semibold hover:bg-[#fcdd8c] transition"
+          disabled={loading}
+        >
+          {loading ? "Henter..." : "📌 Rask oppsummering"}
+        </button>
+      </div>
+
+      {/* 🆕 Bruk PopUp-komponenten */}
+      {visSammendrag && <PopUp content={sammendrag} onClose={() => setVisSammendrag(false)} />}
 
       <div className="mt-6 flex gap-4">
         <div className="flex justify-between w-full mt-4">
-          {/* For desktop (kun fra 1280px og opp) */}
           <div className="hidden xl:flex w-full justify-between">
             <button
               onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
@@ -115,7 +151,6 @@ export default function NewsPage() {
             </button>
           </div>
 
-          {/* For mobil og iPad (opptil 1279px) */}
           <p className="xl:hidden text-gray-400 text-center w-full">⇦ Swipe ⇨</p>
         </div>
       </div>

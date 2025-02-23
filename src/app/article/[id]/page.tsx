@@ -62,7 +62,10 @@ export default function Nyhetsartikkel() {
               ))
             }
             {item.type === "MARKUP" && (
-              <div dangerouslySetInnerHTML={{ __html: item.data ?? "" }} className="prose max-w-none text-lg leading-relaxed" />
+              <div 
+                dangerouslySetInnerHTML={{ __html: item.data ?? "" }} 
+                className="prose max-w-none text-lg leading-relaxed first:font-semibold space-y-4 pt-4" 
+              />
             )}
           </div>
         ))}
