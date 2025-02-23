@@ -36,6 +36,7 @@ export default function NewsPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [visSammendrag, setVisSammendrag] = useState<boolean>(false);
   const [portalName, setPortalName] = useState<string>("");
+  
 
   useEffect(() => {
     async function hentNyheter() {
