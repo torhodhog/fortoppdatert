@@ -5,7 +5,8 @@ import { fetchNews } from "@/app/lib/api";
 import Image from "next/image";
 import { useSwipeable } from "react-swipeable";
 import Link from "next/link";
-import PopUp from "../../../components/Popup"; // 🆕 Import PopUp-komponenten
+import PopUp from "../../../components/Popup"; 
+import InfoButton from "@/components/InfoButton"; 
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -33,12 +34,16 @@ export default function NewsPage() {
   const [sammendrag, setSammendrag] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [visSammendrag, setVisSammendrag] = useState<boolean>(false);
+  const [portalName, setPortalName] = useState<string>("");
 
   useEffect(() => {
     async function hentNyheter() {
       try {
         const data = await fetchNews(portalId as string);
         setNyheter(data);
+        if (data.length > 0) {
+          setPortalName(data[0].title || ""); 
+        }
       } catch (error) {
         console.error("Feil ved henting av nyheter:", error);
       }
@@ -99,7 +104,13 @@ export default function NewsPage() {
             <Slash />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbPage>Nyheter</BreadcrumbPage>
+            <BreadcrumbLink href="/news">Nyheter</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator>
+            <Slash />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+            <BreadcrumbPage>{portalName}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -154,6 +165,8 @@ export default function NewsPage() {
           <p className="xl:hidden text-gray-400 text-center w-full">⇦ Swipe ⇨</p>
         </div>
       </div>
+
+      <InfoButton page="news" /> 
     </div>
   );
 }
