@@ -6,7 +6,7 @@ export interface InfoMessage {
 export const infoMessages: Record<string, InfoMessage> = {
   home: {
     title: "Velkommen til Fort Oppdatert",
-    message: "🔥 Fort Oppdatert er laget for deg på farten. Swipe deg gjennom nyhetene og bli oppdatert på 5 minutter!"
+    message: "🚀 Fort oppdatert er laget for deg på farten. Swipe deg gjennom nyhetene og bli oppdatert på 5 minutter!"
   },
   news: {
     title: "Hvordan fungerer nyhetsvisningen?",

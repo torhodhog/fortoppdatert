@@ -141,7 +141,7 @@ export default function NewsPage() {
       className="flex flex-col items-center justify-center h-screen bg-[#100118] text-white px-4"
       {...swipeHandlers}
     >
-      <Breadcrumb className="mb-4 self-start">
+      <Breadcrumb className="mb-4 lg:ml-10 self-start">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/">Hjem</BreadcrumbLink>
