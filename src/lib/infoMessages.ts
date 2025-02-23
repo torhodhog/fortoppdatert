@@ -1,3 +1,10 @@
+/**
+ * infoMessages.ts 
+* ________________________________________________________________
+* Side for å enkelt kunne legge til infoknapper til kommende sider. 
+
+ */
+
 export interface InfoMessage {
   title: string;
   message: string;
