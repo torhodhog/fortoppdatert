@@ -5,8 +5,8 @@ import { fetchNews } from "@/app/lib/api";
 import Image from "next/image";
 import { useSwipeable } from "react-swipeable";
 import Link from "next/link";
-import PopUp from "../../../components/Popup"; 
-import InfoButton from "@/components/InfoButton"; 
+import PopUp from "../../../components/Popup";
+import InfoButton from "@/components/InfoButton";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,6 +16,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Slash } from "lucide-react";
+import FixedBottomWrapper from "@/components/FixedBottomWrapper";
 
 interface Nyhet {
   id: string;
@@ -41,8 +42,19 @@ export default function NewsPage() {
       try {
         const data = await fetchNews(portalId as string);
         setNyheter(data);
-        if (data.length > 0) {
-          setPortalName(data[0].title || ""); 
+
+        // Hent første portal fra listen
+        if (data.length > 0 && data[0].portals) {
+          const matchendePortal = data[0].portals.find(
+            (p: { slug: string }) => p.slug === portalId
+          );
+
+          console.log(
+            "Matchende portal funnet:",
+            matchendePortal ? matchendePortal.name : "Ingen match"
+          );
+
+          setPortalName(matchendePortal ? matchendePortal.name : "Nyheter");
         }
       } catch (error) {
         console.error("Feil ved henting av nyheter:", error);
@@ -53,13 +65,14 @@ export default function NewsPage() {
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
-      if (currentIndex < nyheter.length - 1) setCurrentIndex((prev) => prev + 1);
+      if (currentIndex < nyheter.length - 1)
+        setCurrentIndex((prev) => prev + 1);
     },
     onSwipedRight: () => {
       if (currentIndex > 0) setCurrentIndex((prev) => prev - 1);
     },
     preventScrollOnSwipe: true,
-    trackMouse: true,
+    trackMouse: false,
   });
 
   if (nyheter.length === 0) return null;
@@ -77,7 +90,8 @@ export default function NewsPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          text: nyhet.content.find((item) => item.type === "MARKUP")?.data || "",
+          text:
+            nyhet.content.find((item) => item.type === "MARKUP")?.data || "",
           type: "summary",
         }),
       });
@@ -93,8 +107,10 @@ export default function NewsPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-[#100118] text-white px-4" {...swipeHandlers}>
-      
+    <div
+      className="flex flex-col items-center justify-center h-screen bg-[#100118] text-white px-4"
+      {...swipeHandlers}
+    >
       <Breadcrumb className="mb-4 self-start">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -104,30 +120,49 @@ export default function NewsPage() {
             <Slash />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/news">Nyheter</BreadcrumbLink>
+            <BreadcrumbLink href="/news">Nyheter</BreadcrumbLink>{" "}
+            {/* Standard fallback */}
           </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <Slash />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbPage>{portalName}</BreadcrumbPage>
-          </BreadcrumbItem>
+          {portalName !== "Nyheter" && (
+            <>
+              <BreadcrumbSeparator>
+                <Slash />
+              </BreadcrumbSeparator>
+              <BreadcrumbItem>
+                <BreadcrumbPage>{portalName}</BreadcrumbPage>{" "}
+                {/* Dynamisk navn på kategori */}
+              </BreadcrumbItem>
+            </>
+          )}
         </BreadcrumbList>
       </Breadcrumb>
 
       <h1 className="text-3xl font-bold mb-6">{nyhet.title}</h1>
 
       {bilde?.url && (
-        <Image src={bilde.url} alt={bilde.caption || "Nyhetsbilde"} width={500} height={300} className="rounded-lg mb-4" />
+        <Image
+          src={bilde.url}
+          alt={bilde.caption || "Nyhetsbilde"}
+          width={500}
+          height={300}
+          className="rounded-lg mb-4"
+        />
       )}
 
-      <p 
+      <p
         className="text-lg text-gray-300 mb-6 line-clamp-4"
-        dangerouslySetInnerHTML={{ __html: nyhet.content.find((item) => item.type === "MARKUP")?.data || "" }}
+        dangerouslySetInnerHTML={{
+          __html:
+            nyhet.content.find((item) => item.type === "MARKUP")?.data || "",
+        }}
       />
 
       <div className="flex gap-4">
-        <Link key={nyhet.id} href={`/article/${nyhet.id}`} className="px-4 py-2 bg-blue-500 text-white rounded-lg">
+        <Link
+          key={nyhet.id}
+          href={`/article/${nyhet.id}`}
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+        >
           Les saken →
         </Link>
 
@@ -141,7 +176,9 @@ export default function NewsPage() {
       </div>
 
       {/* 🆕 Bruk PopUp-komponenten */}
-      {visSammendrag && <PopUp content={sammendrag} onClose={() => setVisSammendrag(false)} />}
+      {visSammendrag && (
+        <PopUp content={sammendrag} onClose={() => setVisSammendrag(false)} />
+      )}
 
       <div className="mt-6 flex gap-4">
         <div className="flex justify-between w-full mt-4">
@@ -154,7 +191,11 @@ export default function NewsPage() {
               ⇦ Forrige
             </button>
             <button
-              onClick={() => setCurrentIndex((prev) => Math.min(nyheter.length - 1, prev + 1))}
+              onClick={() =>
+                setCurrentIndex((prev) =>
+                  Math.min(nyheter.length - 1, prev + 1)
+                )
+              }
               disabled={currentIndex === nyheter.length - 1}
               className="px-4 py-2 bg-gray-600 text-white rounded disabled:opacity-50"
             >
@@ -162,11 +203,14 @@ export default function NewsPage() {
             </button>
           </div>
 
-          <p className="xl:hidden text-gray-400 text-center w-full">⇦ Swipe ⇨</p>
+          <p className="xl:hidden text-gray-400 text-center w-full">
+            ⇦ Swipe ⇨
+          </p>
         </div>
       </div>
-
-      <InfoButton page="news" /> 
+      <FixedBottomWrapper>
+        <InfoButton page="news" />
+      </FixedBottomWrapper>
     </div>
   );
 }

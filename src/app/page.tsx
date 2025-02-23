@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchPortals } from "@/app/lib/api";
 import { useRouter } from "next/navigation";
 import InfoButton from "@/components/InfoButton"; // Importer InfoButton-komponenten
+import FixedBottomWrapper from "@/components/FixedBottomWrapper";
 
 interface Portal {
   _id: string;
@@ -42,8 +43,9 @@ export default function Home() {
           </button>
         ))}
       </div>
-
-      <InfoButton page="home" /> {/* Legg til InfoButton-komponenten */}
+        <FixedBottomWrapper>
+      <InfoButton page="home" /> 
+    </FixedBottomWrapper>
     </div>
   );
 }

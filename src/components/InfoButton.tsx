@@ -8,7 +8,10 @@ interface InfoButtonProps {
 
 export default function InfoButton({ page }: InfoButtonProps) {
   const [showInfo, setShowInfo] = useState(false);
-  const [message, setMessage] = useState<{ title: string; message: string } | null>(null);
+  const [message, setMessage] = useState<{
+    title: string;
+    message: string;
+  } | null>(null);
 
   useEffect(() => {
     if (infoMessages[page]) {
@@ -21,9 +24,9 @@ export default function InfoButton({ page }: InfoButtonProps) {
       {/* ❔ Info-knapp */}
       <button
         onClick={() => setShowInfo(true)}
-        className="fixed bottom-4 right-4 bg-[#b2aeff] text-[#1f1031] p-3 px-4 rounded-full shadow-md hover:bg-[#fcdd8c] transition"
+        className="fixed bottom-4 right-4 bg-[#fcdd8c] text-black p-3 px-5 rounded-full shadow-md transition-colors duration-300 hover:bg-[#b2aeff] hover:text-white"
       >
-        ❔
+        ?
       </button>
 
       {/* Popup-boks */}
@@ -34,7 +37,7 @@ export default function InfoButton({ page }: InfoButtonProps) {
         >
           <div
             className="bg-[#1f1031] p-6 rounded-lg shadow-lg text-white max-w-md relative"
-            onClick={(e) => e.stopPropagation()} 
+            onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-xl font-bold mb-2">{message.title}</h2>
             <p className="text-lg">{message.message}</p>
