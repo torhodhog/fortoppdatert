@@ -35,3 +35,14 @@ Installasjon:
 4️⃣ Start utviklingsserver
    npm run dev
    kjører i localhost:3000 
+
+
+   _____________________________________
+
+   Veien videre og videre utviklingspotensial: 
+   ➡️ Flere AI-funksjoner - mer universell utforming for synshemmede. 
+   ➡️ Mørk/lys funksjon 
+   ➡️ Brukerinstillinger - Tilpasse ønsket nyhetsfeed 
+   ➡️ Reklameplass - mellom nyhetssaker og på hjem-skjerm. 
+   ➡️ Video 
+   
