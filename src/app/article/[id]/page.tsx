@@ -1,8 +1,35 @@
+
+/**
+ * Nyhetsartikkel.tsx - Side for visning av en enkelt nyhetsartikkel.
+ * -------------------------------------------------------------------
+ * Denne komponenten henter og viser en spesifikk nyhetsartikkel basert på ID-en i URL-en.
+ * 
+ * Hovedfunksjoner:
+ * - Henter nyhetsartikkelen fra API-et basert på ID.
+ * - Viser tittel, tekstinnhold og eventuelle bilder tilknyttet artikkelen.
+ * - Brukeren kan navigere tilbake til forrige side ved å klikke på "Tilbake".
+ * - Viser en feilmelding dersom artikkelen ikke kan lastes inn.
+ *
+ * Viktige avhengigheter:
+ * - next/navigation: Henter nyhets-ID fra URL-en og håndterer navigasjon.
+ * - fetchSingleNews fra api.ts: Henter artikkelen fra API-et.
+ * - Image fra next/image: Håndterer optimalisert visning av bilder.
+ * - Tailwind CSS: Brukes for styling.
+ *
+ * Bruk:
+ * - Brukeren klikker på en nyhetsmelding i nyhetsoversikten.
+ * - Denne siden lastes med artikkelens tittel, innhold og bilder.
+ * - Brukeren kan navigere tilbake ved å klikke på "Tilbake".
+
+ */
+
 "use client";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchSingleNews } from "@/app/lib/api";
 import Image from "next/image";
+import FixedBottomWrapper from "@/components/FixedBottomWrapper";
+import InfoButton from "@/components/InfoButton";
 
 interface Nyhet {
   id: string;
@@ -70,6 +97,9 @@ export default function Nyhetsartikkel() {
           </div>
         ))}
       </div>
+      <FixedBottomWrapper>
+              <InfoButton page="article" />
+            </FixedBottomWrapper>
     </div>
   );
 }

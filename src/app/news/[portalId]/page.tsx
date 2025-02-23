@@ -1,3 +1,32 @@
+/**
+ * NewsPage.tsx - Side for å vise nyheter fra en valgt portal.
+ * --------------------------------------------------------------
+ * Denne komponenten henter og viser nyheter basert på hvilken portal brukeren har valgt.
+ * 
+ * Hovedfunksjoner:
+ * - Henter nyheter for en gitt portal basert på portalId fra URL-en.
+ * - Viser tittel, bilde og innhold for hver nyhetsartikkel.
+ * - Brukeren kan swipe (mobil) eller bruke navigasjonsknapper (desktop) for å bla gjennom nyhetene.
+ * - Brukeren kan få en rask oppsummering av nyheten ved hjelp av OpenAI API.
+ * - Brødsmuler (Breadcrumb) brukes for navigasjon og for å vise hvilken portal brukeren er i.
+ * - Informasjonsknappen gir ekstra kontekst om hvordan appen fungerer.
+ * - Sikrer universell utforming med god kontrast, stor skrift og enkel navigasjon.
+ *
+ * Viktige avhengigheter:
+ * - next/navigation: For å hente portalId fra URL-en.
+ * - useSwipeable: For å implementere swipe-funksjonalitet på mobil.
+ * - fetchNews fra api.ts: Henter nyheter fra API-et.
+ * - OpenAI API: Brukes til å generere en kort oppsummering av nyhetene.
+ * - Tailwind CSS: Brukes for styling.
+ *
+ * Bruk:
+ * - Brukeren starter på hjem-siden og velger en nyhetskategori.
+ * - Når en kategori er valgt, vises en liste med nyheter som brukeren kan bla gjennom.
+ * - Brukeren kan trykke på "Les saken" for å åpne hele nyhetsmeldingen.
+ * - Knappen "📌 Rask oppsummering" lar brukeren generere et sammendrag ved hjelp av 
+ */
+
+
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -151,7 +180,7 @@ export default function NewsPage() {
       )}
 
       <p
-        className="text-lg text-gray-300 mb-6 line-clamp-4"
+        className="text-lg text-center text-gray-300 mb-6 line-clamp-4"
         dangerouslySetInnerHTML={{
           __html:
             nyhet.content.find((item) => item.type === "MARKUP")?.data || "",

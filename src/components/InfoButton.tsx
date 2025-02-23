@@ -43,7 +43,7 @@ export default function InfoButton({ page }: InfoButtonProps) {
             <p className="text-lg">{message.message}</p>
             <button
               onClick={() => setShowInfo(false)}
-              className="absolute top-3 right-3 bg-gray-700 hover:bg-gray-600 text-white p-2 rounded-full"
+              className="absolute top-3 right-3 bg-[#fcdd8c] hover:bg-gray-600 text-white px-1 rounded-full"
             >
               ❌
             </button>
